@@ -1,0 +1,49 @@
+name: CyberRakshak 3.0 CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: |
+          server/package-lock.json
+          client/package-lock.json
+
+    - name: Install Server Dependencies
+      run: |
+        cd server
+        npm ci
+
+    - name: Install Client Dependencies
+      run: |
+        cd client
+        npm ci
+
+    - name: Build Client (Vite + React + Tailwind)
+      run: |
+        cd client
+        npm run build
+
+    - name: Build Server (TypeScript)
+      run: |
+        cd server
+        npm run build
+
+    - name: Run E2E Integration Test Suite (12/12 Tests)
+      run: |
+        cd server
+        node test-api.js
