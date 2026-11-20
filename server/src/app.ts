@@ -13,9 +13,6 @@ import incidentRoutes from './routes/incidentRoutes.js';
 import learningRoutes from './routes/learningRoutes.js';
 import demoRoutes from './routes/demoRoutes.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 export const app = express();
 
 // Ensure DB is initialized
@@ -33,7 +30,8 @@ app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // Static uploads directory
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+const uploadsDir = path.resolve(process.cwd(), 'server/uploads');
+app.use('/uploads', express.static(uploadsDir));
 
 // Health & Status
 app.get(['/api/health', '/.netlify/functions/api/health'], (req, res) => {
@@ -61,3 +59,4 @@ app.use('/.netlify/functions/api', apiRouter);
 
 // Global Error Handler
 app.use(errorHandler);
+
