@@ -1,0 +1,26 @@
+[build]
+  command = "npm run build:all"
+  publish = "client/dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Proxy /api requests to Netlify Serverless Function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Client-Side SPA routing fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"

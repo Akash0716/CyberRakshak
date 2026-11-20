@@ -34,3 +34,4 @@ COPY --from=client-builder /app/client/dist /app/client/dist
 EXPOSE 5000
 
 CMD ["node", "dist/index.js"]
+
